@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lichess Blitz Rating</title>
+  <style>
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    th, td {
+      border: 5px solid black;
+      padding: 8px;
+      text-align: center;
+      
+      
+    }
+    th {
+      background-color: #f2f2f2;
+      font-size: larger;
+    }
+    .first{
+        font-weight: bold;
+        font-size: larger;
+    }
+    .second{
+        font-size: large;
+        font-weight: bold;
+        color:red;
+        font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+        
+
+    }
+
+    a{
+        color: inherit;
+        text-decoration: none;
+    }
+    .third{
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: large;
+        font-weight: 900;
+    }
+  </style>
+  
+</head>
+
+<body>
+  <h1>Blitz Rating:</h1>
+  <p id="blitzRating"></p>
+  <table id="userTable">
+    <thead>
+      <tr>
+        <th class="columnHeading">Sno</th>
+        <th class="columnHeading">ID</th>
+        <th class="columnHeading">Rating</th>
+      </tr>
+    </thead>
+    <tbody>
+      
+    </tbody>
+  </table>
+  <h1>LIVE GAMES:</h1>
+  
+  
+  <script>
+    const accounts = ["kalpitdon", "varun05772", "krishankant_2004", "deepanshu202", "surtor15", "homeyprime","Za_Robot10","Dark-knight_1629900","magnusnakamura123456"];
+    const ratingsarr=[];
+    const sortedratingsarr=[];
+    const status=[];
+    
+
+    async function getblitzrating(username) {
+        const response = await fetch(`https://lichess.org/api/user/${username}`);
+        const data = await response.json();
+        return data.perfs.blitz.rating;
+    }
+    async function onlinestatus(username) {
+        const response = await fetch(`https://lichess.org/api/users/status?ids=${username}`);
+        const data = await response.json();
+       
+        const us = data[0].online;
+        return us ? us : false;
+    }
+
+    console.log(status);
+    async function addrow(index,nameid,userrating,j){
+        //getting table
+        const usertable=document.querySelector('#userTable');
+        //creating new row
+        let newrow=document.createElement('tr');
+        newrow.className='rowdata';
+        
+        //serial number
+
+        let serial=document.createElement('td');
+        serial.innerText=index+1;
+        serial.className="first";
+        newrow.appendChild(serial);
+
+        // second cell
+        let second=document.createElement('td');
+        second.className="second"
+        let celllink=document.createElement('a');
+        celllink.href=`https://lichess.org/@/${nameid}`;
+        celllink.textContent=nameid;
+        second.appendChild(celllink);
+       
+       if(status[j]===true){
+        second.style.color="green";
+       }
+        
+        
+        newrow.appendChild(second);
+        
+        //third cell
+        let third=document.createElement('td');
+        third.className="third";
+        third.innerText=userrating;
+        newrow.appendChild(third);
+        usertable.append(newrow);
+
+
+
+    }
+    (async function() {
+        for(var i=0;i<accounts.length;i++){
+            const onstatus=await onlinestatus(accounts[i]);
+            console.log(onstatus);
+            status.push(onstatus);
+        }
+        console.log(status);
+    })();
+    
+    
+    async function printrating() {
+        const done=[];
+        
+        for (let i = 0; i < accounts.length; i++) {
+            const rating = await getblitzrating(accounts[i]);
+            //console.log(accounts[i] + ": " + rating);
+            ratingsarr.push(rating);
+            sortedratingsarr.push(rating);
+
+        }
+        sortedratingsarr.sort();
+        sortedratingsarr.reverse();
+        var ind=0;
+        for(let i=0;i<accounts.length;i++){
+            for(let j=0;j<accounts.length;j++){
+                if(ratingsarr[j]==sortedratingsarr[i]){
+                    var f=0;
+                    for(var k=0;k<done.length;k++){
+                        if(done[k]===accounts[j]){
+                            f=1;
+                            break;
+                        }
+                    }
+                    if(f==1){
+                        continue;
+                    }
+                    onlinestatus(accounts[j]);
+                    done.push(accounts[j]);
+                    
+                    
+                    addrow(i,accounts[j],ratingsarr[j],j);
+
+                    console.log(accounts[j] + ": " + ratingsarr[j]);
+                    break;
+
+                }
+
+            }
+
+        }
+    }
+    async function followgames() {
+        for(let i=0;i<accounts.length();i++){
+
+        }
+
+    }
+   printrating();
+
+   
+  </script>
+</body>
+</html>
