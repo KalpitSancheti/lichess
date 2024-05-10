@@ -4,6 +4,8 @@ const status=[];
 var type=0;
 
 
+
+
 async function getblitzrating(username) {
     const response = await fetch(`https://lichess.org/api/user/${username}`);
     const data = await response.json();
@@ -26,9 +28,15 @@ async function onlinestatus(username) {
     const us = data[0].online;
     return us ? us : false;
 }
+async function getplayingstatus(username) {
+    const response = await fetch(`https://lichess.org/api/user/${username}`);
+    const data = await response.json();
+    return data.playing;
+}
 
-console.log(status);
-async function addrow(index,nameid,userrating,j){
+
+
+async function addrow(index,nameid,userrating,j,gamestatus){
     //getting table
     const usertable=document.querySelector('#userTable tbody');
     //creating new row
@@ -63,73 +71,84 @@ async function addrow(index,nameid,userrating,j){
     third.innerText=userrating;
     newrow.appendChild(third);
     usertable.append(newrow);
+    // fourth cell
+    let fourth=document.createElement('td');
+    fourth.className="fourth";
+    if(gamestatus){
+        let gl=document.createElement('a');
+        gl.href=gamestatus;
+        gl.innerText="♟️";
+        gl.target="_blank";
+        fourth.appendChild(gl);
+        
+    }
+    else{
+        fourth.innerText="🚫"
+    }
+    
+   
+    newrow.appendChild(fourth);
+    usertable.append(newrow);
 
 
 
 }
-(async function() {
-    for(var i=0;i<accounts.length;i++){
-        const onstatus=await onlinestatus(accounts[i]);
-        console.log(onstatus);
-        status.push(onstatus);
-    }
-    console.log(status);
-})();
+// (async function() {
+//     for(var i=0;i<accounts.length;i++){
+//         const onstatus=await onlinestatus(accounts[i]);
+      
+//         status.push(onstatus);
+//     }
+    
+// })();
 
 
 async function printrating(type) {
-    
     const done=[];
     const ratingsarr=[];
     const sortedratingsarr=[];
-    console.log(sortedratingsarr);
+    const playingst=[];
+
     const tbody = document.querySelector('#userTable > tbody');
     tbody.innerHTML='';
 
-
     for (let i = 0; i < accounts.length; i++) {
         let rating;
-        if(type===0){ rating = await getrapidrating(accounts[i]);}
-        if(type===1){ rating = await getblitzrating(accounts[i]);}
-        if(type===2){ rating = await getbulletrating(accounts[i]);}
-        //console.log(accounts[i] + ": " + rating);
+        if(type === 0) { rating = await getrapidrating(accounts[i]); }
+        if(type === 1) { rating = await getblitzrating(accounts[i]); }
+        if(type === 2) { rating = await getbulletrating(accounts[i]); }
+       
         ratingsarr.push(rating);
         sortedratingsarr.push(rating);
-
     }
     sortedratingsarr.sort((a, b) => b - a);
   
-    console.log(sortedratingsarr);
-    
     var ind=0;
     for(let i=0;i<accounts.length;i++){
         for(let j=0;j<accounts.length;j++){
-            if(ratingsarr[j]==sortedratingsarr[i]){
+            if(ratingsarr[j] === sortedratingsarr[i]){
                 var f=0;
                 for(var k=0;k<done.length;k++){
-                    if(done[k]===accounts[j]){
+                    if(done[k] === accounts[j]){
                         f=1;
                         break;
                     }
                 }
-                if(f==1){
+                if(f === 1){
                     continue;
                 }
-                onlinestatus(accounts[j]);
+                const onstatus = await onlinestatus(accounts[j]); 
+                status[j] = onstatus;
                 done.push(accounts[j]);
-                
-                
-                addrow(i,accounts[j],ratingsarr[j],j);
-
-                console.log(accounts[j] + ": " + ratingsarr[j]);
+                var st = await getplayingstatus(accounts[j]);
+                addrow(i, accounts[j], ratingsarr[j], j, st);
                 break;
-
             }
-
         }
-
     }
 }
+
+
 
 $(".btn").click(function(){
     
