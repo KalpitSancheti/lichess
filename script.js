@@ -145,7 +145,7 @@ async function printrating(type) {
 
 
 
-$(".btn").click(function(){
+$(".btn").click(async function(){
     
     var index = $(".btn").index(this);
     
