@@ -161,7 +161,7 @@ $(".btn").click(function(){
   async function main() {
     await pushstatus();
     await onlinestatus(); 
-    printrating(2);
+    printrating(1);
 }
 main();
 
