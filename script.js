@@ -6,21 +6,7 @@ var type=0;
 
 
 
-async function getblitzrating(username) {
-    const response = await fetch(`https://lichess.org/api/user/${username}`);
-    const data = await response.json();
-    return data.perfs.blitz.rating;
-}
-async function getbulletrating(username) {
-    const response = await fetch(`https://lichess.org/api/user/${username}`);
-    const data = await response.json();
-    return data.perfs.bullet.rating;
-}
-async function getrapidrating(username) {
-    const response = await fetch(`https://lichess.org/api/user/${username}`);
-    const data = await response.json();
-    return data.perfs.rapid.rating;
-}
+
 async function onlinestatus(username) {
     const response = await fetch(`https://lichess.org/api/users/status?ids=${username}`);
     const data = await response.json();
@@ -28,10 +14,11 @@ async function onlinestatus(username) {
     const us = data[0].online;
     return us ? us : false;
 }
-async function getplayingstatus(username) {
+
+async function getallstatus(username){
     const response = await fetch(`https://lichess.org/api/user/${username}`);
     const data = await response.json();
-    return data.playing;
+    return data;
 }
 
 
@@ -93,30 +80,34 @@ async function addrow(index,nameid,userrating,j,gamestatus){
 
 
 }
-// (async function() {
-//     for(var i=0;i<accounts.length;i++){
-//         const onstatus=await onlinestatus(accounts[i]);
-      
-//         status.push(onstatus);
-//     }
-    
-// })();
 
+const allstatus=[];
+async function pushstatus(){
+    for(var i=0;i<accounts.length;i++){
+        var sta=await getallstatus(accounts[i]);
+        allstatus.push(sta);
+    }
+
+}
 
 async function printrating(type) {
     const done=[];
     const ratingsarr=[];
     const sortedratingsarr=[];
     const playingst=[];
+    pushstatus();
+  
+    
 
     const tbody = document.querySelector('#userTable > tbody');
     tbody.innerHTML='';
 
     for (let i = 0; i < accounts.length; i++) {
+
         let rating;
-        if(type === 0) { rating = await getrapidrating(accounts[i]); }
-        if(type === 1) { rating = await getblitzrating(accounts[i]); }
-        if(type === 2) { rating = await getbulletrating(accounts[i]); }
+        if(type === 0) { rating = allstatus[i].perfs.rapid.rating; }
+        if(type === 1) { rating = allstatus[i].perfs.blitz.rating; }
+        if(type === 2) { rating = allstatus[i].perfs.bullet.rating;; }
        
         ratingsarr.push(rating);
         sortedratingsarr.push(rating);
@@ -140,7 +131,7 @@ async function printrating(type) {
                 const onstatus = await onlinestatus(accounts[j]); 
                 status[j] = onstatus;
                 done.push(accounts[j]);
-                var st = await getplayingstatus(accounts[j]);
+                var st = allstatus[j].playing;
                 addrow(i, accounts[j], ratingsarr[j], j, st);
                 break;
             }
@@ -163,5 +154,9 @@ $(".btn").click(function(){
     
     printrating(index);
   });
-  printrating(2);
+  async function main() {
+    await pushstatus();
+    printrating(2);
+}
+main();
 
