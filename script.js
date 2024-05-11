@@ -6,13 +6,17 @@ var type=0;
 
 
 
-
-async function onlinestatus(username) {
-    const response = await fetch(`https://lichess.org/api/users/status?ids=${username}`);
+let isonline=[];
+async function onlinestatus() {
+    isonline=[];
+    const response = await fetch(`https://lichess.org/api/users/status?ids=kalpitdon,varun05772,krishankant_2004,deepanshu202,surtor15,homeyprime,Za_Robot10,Dark-knight_1629900,magnusnakamura123456`);
     const data = await response.json();
    
-    const us = data[0].online;
-    return us ? us : false;
+    for(var i=0;i<accounts.length;i++){
+        if(data[i].online==true) isonline.push(true);
+        else isonline.push(false);
+        
+    }
 }
 
 async function getallstatus(username){
@@ -45,7 +49,7 @@ async function addrow(index,nameid,userrating,j,gamestatus){
     celllink.textContent=nameid;
     second.appendChild(celllink);
    
-   if(status[j]===true){
+   if(isonline[j]===true){
     second.style.color="green";
    }
     
@@ -128,8 +132,8 @@ async function printrating(type) {
                 if(f === 1){
                     continue;
                 }
-                const onstatus = await onlinestatus(accounts[j]); 
-                status[j] = onstatus;
+                
+               
                 done.push(accounts[j]);
                 var st = allstatus[j].playing;
                 addrow(i, accounts[j], ratingsarr[j], j, st);
@@ -156,6 +160,7 @@ $(".btn").click(function(){
   });
   async function main() {
     await pushstatus();
+    await onlinestatus(); 
     printrating(2);
 }
 main();
