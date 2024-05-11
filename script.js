@@ -155,7 +155,7 @@ $(".btn").click(function(){
     
     $(this).addClass("active");
   
-    
+    await onlinestatus();
     printrating(index);
   });
   async function main() {
