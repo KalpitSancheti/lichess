@@ -50,10 +50,55 @@
             flex: 1;
             
         }
-        
+        .navbar {
+            display: flex;
+            justify-content: start;
+            align-items: center;
+            background-color: #333;
+            padding: 10px;
+        }
+        .navbar a {
+                color: #fff;
+                font-size: 20px;
+                margin: 0 10px;
+                cursor: pointer;
+                text-decoration: none;
+        }
+        .navbar a:hover {
+                color: #ee00ff; 
+        }
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 35px;
+            }
+            table {
+                width: 100%;
+                margin: 1%;
+            }
+            th, td {
+                font-size: 10px;
+                padding: 3px;
+            }
+            h4 {
+                font-size: 30px;
+            }
+            .navbar {
+                justify-content: space-between;
+                width: 100%;
+            }
+            .navbar a {
+                margin: 0 10px;
+            }
+        }
+
     </style>
 </head>
 <body>
+    <div class="navbar" >
+        <a href="index.html">Home</a>
+        <a href="check.html">Create Game</a>
+        <a href="tournament.html">Leaderboard</a>
+      </div>
     <h1 class="honk-headingh1">GENERATE GAME LINK </h1>
     <div class="typebuttons">
         <button type="button" id="0" class="gamebtn btn btn-outline-primary">BULLET GAME(1+1)</button>

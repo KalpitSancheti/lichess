@@ -15,6 +15,9 @@
     #secondheading{
       color: blue;
     }
+    body{
+      overflow-x: hidden;
+    }
     table {
       width: 90%;
       border-collapse: collapse;
@@ -82,12 +85,57 @@
     .fourth{
       font-size: 20px;
     }
+    .navbar {
+            display: flex;
+            justify-content: start;
+            align-items: center;
+            background-color: #333;
+            padding: 10px;
+    }
+    .navbar a {
+            color: #fff;
+            font-size: 20px;
+            margin: 0 10px;
+            cursor: pointer;
+            
+    }
+    .navbar a:hover {
+            color: #ee00ff; 
+    }
+    @media (max-width: 768px) {
+      table {
+        width: 100%;
+        margin: 2px;
+      }
+      th, td {
+        font-size: 10px;
+        padding: 2px;
+      }
+      h1 {
+        font-size: 40px;
+      }
+      .btn {
+        font-size: 12px;
+      }
+      .navbar {
+        justify-content: space-between;
+        width: 105%;
+      }
+      .navbar a {
+          margin: 0 10px;
+      }
+    }
   </style>
   
   
 </head>
 
 <body>
+  <div class="navbar" >
+    <a href="index.html">Home</a>
+    <a href="check.html">Create Game</a>
+    <a href="tournament.html">Leaderboard</a>
+  </div>
   <a href=""><h1>LICHESS APP</h1></a>
   
   <p class="d-inline-flex gap-1">
@@ -112,10 +160,9 @@
       
     </tbody>
   </table>
-
-   <a href="check.html"><h1 id="secondheading">Generate Game Link</h1></a>
+   <!-- <a href="check.html"><h1 id="secondheading">Generate Game Link</h1></a>
    <br><br><br>
-   <a href="tournament.html"><h1 id="secondheading">TOURNAMENTS</h1></a>
+   <a href="tournament.html"><h1 id="secondheading">TOURNAMENTS</h1></a> -->
    
   
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
