@@ -83,7 +83,7 @@ async function updatestandings(){
 }
 async function main(){
     await updatestandings();
-    for(var i=0;i<tids.length;i++){
+    for(var i=tids.length-1;i>=0;i--){
 
         const distable=document.querySelector('#table2');
         let newrow=document.createElement('tr');
